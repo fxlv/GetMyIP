@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Net.Http;
+using System.Text.RegularExpressions;
+
 
 namespace ConsoleApplication3
 {
@@ -16,8 +18,8 @@ namespace ConsoleApplication3
             ConcurrentQueue<string> ipq = new ConcurrentQueue<string>();
             
             Console.WriteLine("Getting your IP, please wait...");
-            get(ipq);
-            Console.Write("Waiting om response from server");
+            GetMyIp.Get(ipq);
+            Console.Write("Waiting on response from server");
             while (ipq.Count == 0)
             {
                 Console.Write(".");
@@ -26,6 +28,7 @@ namespace ConsoleApplication3
             Console.WriteLine(".");
             string ipAddress;
             ipq.TryDequeue(out ipAddress);
+            ipAddress = StripHtml(ipAddress);
             Console.WriteLine(String.Format("Your IP: {0}", ipAddress));
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
@@ -33,19 +36,14 @@ namespace ConsoleApplication3
 
 
         }
-        static async void get(ConcurrentQueue<string> ipq)
+
+        public static string StripHtml(string htmlContent)
         {
-            string response = "";
-            HttpClient client = new HttpClient();
-            try {
-                response = await client.GetStringAsync("http://ip.bgp.lv");
-            }
-            catch (System.Net.Http.HttpRequestException)
-            {
-                Console.WriteLine("Could not get the IP address.");
-                Environment.Exit(1);
-            }
-            ipq.Enqueue(response);
+            string pattern = "([0-9.]+)";
+            Match match = Regex.Match(htmlContent, pattern);
+            Console.WriteLine(match);
+            return match.ToString();
+            
         }
     }
 }
