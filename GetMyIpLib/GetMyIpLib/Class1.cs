@@ -12,15 +12,32 @@ namespace GetMyIpLibrary
     public class MyIp
     {
         public string IP;
+        public static string ipAddressDetectionUrl = "http://ip.bgp.lv";
 
-        // pass in a Concurrent Queue object
+        /// <summary>
+        /// Simple, blocking method that returns YOUR IP as a string
+        /// </summary>
+        /// <returns></returns>
+        public static string GetIpBlocking()
+        {
+            HttpClient client = new HttpClient();
+            string myIp  = client.GetStringAsync(ipAddressDetectionUrl).Result;
+            myIp = StripHtml(myIp);
+            return myIp;
+        }
+
+
+        /// <summary>
+        /// Async version of pass in a Concurrent Queue object
+        /// </summary>
+        /// <param name="ipq"></param>
         public static async void GetIpAsync(ConcurrentQueue<string> ipq)
         {
             string response = "";
             HttpClient client = new HttpClient();
             try
             {
-                response = await client.GetStringAsync("http://ip.bgp.lv");
+                response = await client.GetStringAsync(ipAddressDetectionUrl);
             }
             catch (System.Net.Http.HttpRequestException)
             {
