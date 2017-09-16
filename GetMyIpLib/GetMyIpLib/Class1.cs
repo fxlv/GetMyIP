@@ -4,23 +4,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-public class GetMyIp
+namespace GetMyIpLibrary
 {
-    public static async void Get(ConcurrentQueue<string> ipq)
+    public class MyIp
     {
-        string response = "";
-        HttpClient client = new HttpClient();
-        try
+        public string IP;
+
+        // pass in a Concurrent Queue object
+        public static async void GetIpAsync(ConcurrentQueue<string> ipq)
         {
-            response = await client.GetStringAsync("http://ip.bgp.lv");
+            string response = "";
+            HttpClient client = new HttpClient();
+            try
+            {
+                response = await client.GetStringAsync("http://ip.bgp.lv");
+            }
+            catch (System.Net.Http.HttpRequestException)
+            {
+                Console.WriteLine("Could not get the IP address.");
+                Environment.Exit(1);
+            }
+            response = StripHtml(response);
+            ipq.Enqueue(response);
         }
-        catch (System.Net.Http.HttpRequestException)
+        public static string StripHtml(string htmlContent)
         {
-            Console.WriteLine("Could not get the IP address.");
-            Environment.Exit(1);
+            string pattern = "([0-9.]+)";
+            Match match = Regex.Match(htmlContent, pattern);
+            return match.ToString();
         }
-        ipq.Enqueue(response);
+     
     }
 }
