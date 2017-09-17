@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using NMock;
+using RichardSzalay.MockHttp;
 
 namespace GetMyIpLibrary
 {
@@ -13,14 +15,15 @@ namespace GetMyIpLibrary
     {
         public string IP;
         public static string ipAddressDetectionUrl = "http://ip.bgp.lv";
+        public HttpClient client = new HttpClient();
+
 
         /// <summary>
         /// Simple, blocking method that returns YOUR IP as a string
         /// </summary>
         /// <returns></returns>
-        public static string GetIpBlocking()
+        public string GetIpBlocking()
         {
-            HttpClient client = new HttpClient();
             string myIp  = client.GetStringAsync(ipAddressDetectionUrl).Result;
             myIp = StripHtml(myIp);
             return myIp;

@@ -4,6 +4,8 @@ using NUnit.Framework;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
+using NMock;
+using RichardSzalay.MockHttp;
 
 namespace Tests
 {
@@ -46,10 +48,28 @@ namespace Tests
             }
             // after there has been a response, count should now be 1
             Assert.AreEqual(1, ipq.Count);
+        }
+        [Test]
+        public void TestGetIpBlocking()
+        {
+            MyIp myip = new MyIp();
 
+            string myIpAddress = myip.GetIpBlocking();
+            Assert.IsNotEmpty(myIpAddress);
+        }
+        [Test]
+        public void TestGetIpBlockingReturnsCorrectIp()
+        {
+            // set up mock HttpCLient and pass it to MyIp()
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.When(GetMyIpLibrary.MyIp.ipAddressDetectionUrl).Respond("content/text", "<b>127.0.0.1</b>");
+            
 
-
-
+            MyIp myip = new MyIp();
+            myip.client = mockHttp.ToHttpClient();
+            string testIp = "127.0.0.1";
+            string myIpAddress = myip.GetIpBlocking();
+            Assert.AreEqual(testIp, myIpAddress);
         }
 
         private MyIp CreateGetMyIp()
