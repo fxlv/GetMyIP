@@ -11,7 +11,13 @@ using RichardSzalay.MockHttp;
 
 namespace GetMyIpLibrary
 {
-    public class MyIp
+    public interface IMyIp
+    {
+        string GetIpBlocking();
+        string StripHtml(string htmlContent);
+
+    }
+    public class MyIp : IMyIp
     {
         public string IP;
         public static string ipAddressDetectionUrl = "http://ip.bgp.lv";
@@ -47,10 +53,11 @@ namespace GetMyIpLibrary
                 Console.WriteLine("Could not get the IP address.");
                 Environment.Exit(1);
             }
-            response = StripHtml(response);
+            //response = StripHtml(response);
             ipq.Enqueue(response);
         }
-        public static string StripHtml(string htmlContent)
+
+        public string StripHtml(string htmlContent)
         {
             string pattern = "([0-9.]+)";
             Match match = Regex.Match(htmlContent, pattern);
