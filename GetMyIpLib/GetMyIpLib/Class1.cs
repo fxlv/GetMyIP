@@ -40,7 +40,7 @@ namespace GetMyIpLibrary
         /// Async version of pass in a Concurrent Queue object
         /// </summary>
         /// <param name="ipq"></param>
-        public static async void GetIpAsync(ConcurrentQueue<string> ipq)
+        public async void GetIpAsync(ConcurrentQueue<string> ipq)
         {
             string response = "";
             HttpClient client = new HttpClient();
@@ -53,7 +53,7 @@ namespace GetMyIpLibrary
                 Console.WriteLine("Could not get the IP address.");
                 Environment.Exit(1);
             }
-            //response = StripHtml(response);
+            response = StripHtml(response);
             ipq.Enqueue(response);
         }
 

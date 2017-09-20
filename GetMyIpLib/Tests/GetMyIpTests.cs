@@ -48,8 +48,9 @@ namespace Tests
 
 
             MyIp getMyIp = this.CreateGetMyIp();
+            MyIp myip = new MyIp();
             ConcurrentQueue<string> ipq = new ConcurrentQueue<string>();
-            GetMyIpLibrary.MyIp.GetIpAsync(ipq);
+            myip.GetIpAsync(ipq);
             Assert.AreEqual(0, ipq.Count);
             while (ipq.Count == 0)
             {

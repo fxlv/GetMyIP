@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
-using System.Net.Http;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using GetMyIpLibrary;
 
 namespace ConsoleApplication3
 {
     class Program
     {
-        static void Main(string[] args)
+        private static string GetIp()
         {
             ConcurrentQueue<string> ipq = new ConcurrentQueue<string>();
-            
-            Console.WriteLine("Getting your IP, please wait...");
-            GetMyIpLibrary.MyIp.GetIpAsync(ipq);
+            MyIp myip = new MyIp();
+            myip.GetIpAsync(ipq);
             Console.Write("Waiting on response from server");
             while (ipq.Count == 0)
             {
@@ -28,6 +25,12 @@ namespace ConsoleApplication3
             Console.WriteLine(".");
             string ipAddress;
             ipq.TryDequeue(out ipAddress);
+            return ipAddress;
+        }
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Getting your IP, please wait...");
+            string ipAddress = GetIp();
             Console.WriteLine(String.Format("Your IP: {0}", ipAddress));
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
