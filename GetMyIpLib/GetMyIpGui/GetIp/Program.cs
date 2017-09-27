@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net.Http;
 using System.Collections.Concurrent;
+using GetMyIpLibrary;
 
 
 namespace GetMyIpGUI
@@ -23,11 +24,11 @@ namespace GetMyIpGUI
 
         }
 
-        public static async Task getMyIpAsync(ConcurrentQueue<string> ipq)
+        public static string getMyIp()
         {
-            HttpClient client = new HttpClient();
-            string contents = await client.GetStringAsync("http://ip.bgp.lv");
-            ipq.Enqueue(contents);
+            MyIp myIp = new MyIp();
+            var ip = myIp.GetIpBlocking();
+            return ip;
         }
 
     }

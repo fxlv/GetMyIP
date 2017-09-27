@@ -31,7 +31,7 @@ namespace ConsoleApplication3
         {
             Console.WriteLine("Getting your IP, please wait...");
             string ipAddress = GetIp();
-            Console.WriteLine(String.Format("Your IP: {0}", ipAddress));
+            Console.WriteLine("Your IP: {0}", ipAddress);
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
         }

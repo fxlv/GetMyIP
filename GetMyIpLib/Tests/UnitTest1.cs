@@ -1,4 +1,4 @@
-using GetMyIpLibrary;
+﻿using GetMyIpLibrary;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Concurrent;
@@ -38,7 +38,7 @@ namespace Tests
         {
             string htmlIp = "<b>127.0.0.1</b>";
             string strippedIp = "127.0.0.1";
-            Mock<IMyIp> myip =  new Mock<IMyIp>();
+            Mock<IMyIp> myip = new Mock<IMyIp>();
             myip.Setup(foo => foo.StripHtml(htmlIp)).Returns(strippedIp);
             Assert.AreEqual(myip.Object.StripHtml(htmlIp), strippedIp);
         }
@@ -73,7 +73,7 @@ namespace Tests
             // set up mock HttpCLient and pass it to MyIp()
             var mockHttp = new MockHttpMessageHandler();
             mockHttp.When(GetMyIpLibrary.MyIp.ipAddressDetectionUrl).Respond("content/text", "<b>127.0.0.1</b>");
-            
+
 
             MyIp myip = new MyIp();
             myip.client = mockHttp.ToHttpClient();

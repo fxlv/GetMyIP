@@ -107,6 +107,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\GetMyIpLib\GetMyIpLib.csproj">
+      <Project>{8dbcc3de-6a46-4c66-8fed-5782c9d8635b}</Project>
+      <Name>GetMyIpLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

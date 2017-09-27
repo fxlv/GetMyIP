@@ -16,8 +16,7 @@ namespace GetMyIpGUI
 {
     public partial class GetMyIp : Form
     {
-        ConcurrentQueue<string> ipq = new ConcurrentQueue<string>();
-        string ipAddress;
+       
 
 
         public GetMyIp()
@@ -43,9 +42,8 @@ namespace GetMyIpGUI
         {
 
             label2.Text = "Getting your IP...";
-            await Program.getMyIpAsync(ipq);
-            ipq.TryDequeue(out ipAddress);
-            label2.Text = ipAddress;
+           
+            label2.Text = Program.getMyIp();
                
         }
 
