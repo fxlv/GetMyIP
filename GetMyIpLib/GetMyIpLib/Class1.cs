@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NMock;
 using RichardSzalay.MockHttp;
-
+using System.Configuration;
 namespace GetMyIpLibrary
 {
     public interface IMyIp
@@ -19,15 +19,22 @@ namespace GetMyIpLibrary
     }
     public class MyIp : IMyIp
     {
-        public string IP;
-        public static string ipAddressDetectionUrl = "http://ip.bgp.lv";
+        public string ipAddressDetectionUrl = "";
         public HttpClient client = new HttpClient();
 
+        public MyIp()
+        {
+            // set up ipSource with the value from App config
+            var settings = new GetMyIpLib.Properties.Settings();
+            ipAddressDetectionUrl = $"http://{settings.ipSource}";
+        }
 
-        /// <summary>
-        /// Simple, blocking method that returns YOUR IP as a string
-        /// </summary>
-        /// <returns></returns>
+
+
+    /// <summary>
+    /// Simple, blocking method that returns YOUR IP as a string
+    /// </summary>
+    /// <returns></returns>
         public string GetIpBlocking()
         {
             string myIp  = client.GetStringAsync(ipAddressDetectionUrl).Result;
