@@ -50,8 +50,7 @@ namespace GetMyIpLibrary
             }
             catch (System.Net.Http.HttpRequestException)
             {
-                Console.WriteLine("Could not get the IP address.");
-                Environment.Exit(1);
+                Console.WriteLine("failed to get the IP address.");
             }
             response = StripHtml(response);
             ipq.Enqueue(response);
