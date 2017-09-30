@@ -43,10 +43,8 @@ namespace Tests
             Assert.AreEqual(myip.Object.StripHtml(htmlIp), strippedIp);
         }
         [Test]
-        public void TestGetIpAsyncRequestWorks()
+        public void TestGetIpAsyncRequestReturnsOneResult()
         {
-
-
             MyIp getMyIp = this.CreateGetMyIp();
             MyIp myip = new MyIp();
             ConcurrentQueue<string> ipq = new ConcurrentQueue<string>();
@@ -60,6 +58,24 @@ namespace Tests
             Assert.AreEqual(1, ipq.Count);
         }
         [Test]
+        public void TestGetIpAsyncRequestReturnsNonEmptyResult()
+        {
+            MyIp getMyIp = this.CreateGetMyIp();
+            MyIp myip = new MyIp();
+            ConcurrentQueue<string> ipq = new ConcurrentQueue<string>();
+            myip.GetIpAsync(ipq);
+            Assert.AreEqual(0, ipq.Count);
+            while (ipq.Count == 0)
+            {
+                Thread.Sleep(10);
+            }
+            // after there has been a response, count should now be 1
+            //Assert.AreEqual(1, ipq.Count);
+            string ipAddress;
+            ipq.TryDequeue(out ipAddress);
+            Assert.IsNotEmpty(ipAddress);
+        }
+        [Test]
         public void TestGetIpBlocking()
         {
             MyIp myip = new MyIp();
@@ -68,14 +84,14 @@ namespace Tests
             Assert.IsNotEmpty(myIpAddress);
         }
         [Test]
-        public void TestGetIpBlockingReturnsCorrectIp()
+        public void TestGetIpBlockingReturnsCorrectIpMocked()
         {
             // set up mock HttpCLient and pass it to MyIp()
             var mockHttp = new MockHttpMessageHandler();
-            mockHttp.When(GetMyIpLibrary.MyIp.ipAddressDetectionUrl).Respond("content/text", "<b>127.0.0.1</b>");
-
-
             MyIp myip = new MyIp();
+            mockHttp.When(myip.ipAddressDetectionUrl).Respond("content/text", "<b>127.0.0.1</b>");
+
+
             myip.client = mockHttp.ToHttpClient();
             string testIp = "127.0.0.1";
             string myIpAddress = myip.GetIpBlocking();
